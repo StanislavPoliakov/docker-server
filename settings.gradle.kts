@@ -1,1 +1,1 @@
-rootProject.name = "home.ru.docker-server"
+rootProject.name = "docker-server"

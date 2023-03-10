@@ -3,12 +3,13 @@ val kotlin_version: String by project
 val logback_version: String by project
 
 plugins {
+    application
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.4"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
-group = "home.ru"
+group = "home"
 version = "0.0.1"
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -17,8 +18,25 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
+ktor {
+    fatJar {
+        archiveFileName.set("docker-server.jar")
+    }
+}
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "io.ktor.server.netty.EngineMain"
+    manifest.attributes["Class-Path"] = configurations
+        .runtimeClasspath
+        .get()
+        .joinToString(separator = " ") { file ->
+            "libs/${file.name}"
+        }
+}
+
 repositories {
     mavenCentral()
+    maven(url = "https://kotlin.bintray.com/ktor")
 }
 
 dependencies {
