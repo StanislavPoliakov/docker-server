@@ -1,5 +1,6 @@
 package home.ru
 
+import home.plugins.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.server.testing.*

@@ -1,4 +1,4 @@
-package home.ru.plugins
+package home.plugins
 
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.application.*

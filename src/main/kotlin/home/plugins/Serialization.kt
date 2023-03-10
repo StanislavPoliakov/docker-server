@@ -1,5 +1,6 @@
-package home.ru.plugins
+package home.plugins
 
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
@@ -11,8 +12,8 @@ fun Application.configureSerialization() {
         json()
     }
     routing {
-        get("/json/kotlinx-serialization") {
-                call.respond(mapOf("hello" to "world"))
+        get("/health/") {
+                call.respond(status = HttpStatusCode.OK, message = mapOf("status" to "OK"))
             }
     }
 }
