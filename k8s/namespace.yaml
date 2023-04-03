@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: namespace-application-server
   labels:
-    name: app
+    name: application-server
