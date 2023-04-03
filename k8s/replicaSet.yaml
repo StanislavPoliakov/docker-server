@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica-set
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application-server
+  template:
+    metadata:
+      labels:
+        app: application-server
+    spec:
+      containers:
+        - name: docker-server
+          image: stanislavpoliakov/docker-server:latest
+          ports:
+            - containerPort: 80

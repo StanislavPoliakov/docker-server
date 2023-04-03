@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application-server
+  template:
+    metadata:
+      labels:
+        app: application-server
+    spec:
+      containers:
+        - name: docker-server
+          image: stanislavpoliakov/docker-server:latest
+          ports:
+            - containerPort: 8000
