@@ -46,7 +46,11 @@ fun Application.configureSerialization(probe: Probe) {
         }
 
         get("/probe/liveness/") {
-            call.respond(status = HttpStatusCode.OK, message = "${probe.liveness}")
+            val statusCode = when (probe.liveness) {
+                ProbeStatus.SUCCESS -> HttpStatusCode.OK
+                ProbeStatus.FAILED -> HttpStatusCode.ServiceUnavailable
+            }
+            call.respond(status = statusCode, message = "${probe.liveness}")
         }
 
         post("/probe/readiness/") {
@@ -69,7 +73,11 @@ fun Application.configureSerialization(probe: Probe) {
         }
 
         get("/probe/readiness/") {
-            call.respond(status = HttpStatusCode.OK, message = "${probe.readiness}")
+            val statusCode = when (probe.readiness) {
+                ProbeStatus.SUCCESS -> HttpStatusCode.OK
+                ProbeStatus.FAILED -> HttpStatusCode.ServiceUnavailable
+            }
+            call.respond(status = statusCode, message = "${probe.readiness}")
         }
 
         get("/probe/all/") {
