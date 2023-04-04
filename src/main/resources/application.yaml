@@ -5,4 +5,4 @@ ktor:
     deployment:
         port: 8000
         shutdown:
-            url: "/shutdown"
+            url: "/shutdown/"
