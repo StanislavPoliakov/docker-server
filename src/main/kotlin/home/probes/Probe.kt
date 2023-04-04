@@ -3,8 +3,8 @@ package home.probes
 import kotlinx.serialization.Serializable
 
 object Probe {
-    var liveness: ProbeStatus = ProbeStatus.FAILED
-    var readiness: ProbeStatus = ProbeStatus.FAILED
+    var liveness: ProbeStatus = ProbeStatus.SUCCESS
+    var readiness: ProbeStatus = ProbeStatus.SUCCESS
 }
 
 enum class ProbeStatus {

@@ -19,6 +19,20 @@ spec:
     spec:
       containers:
         - name: docker-server
-          image: stanislavpoliakov/docker-server:1.0.0
+          image: stanislavpoliakov/docker-server:1.1.1
           ports:
             - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /probe/liveness/
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /probe/readiness/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 5
