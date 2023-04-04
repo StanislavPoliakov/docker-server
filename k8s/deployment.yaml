@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: docker-server
-          image: stanislavpoliakov/docker-server:1.1.1
+          image: stanislavpoliakov/docker-server:1.2.1
           ports:
             - containerPort: 8000
           livenessProbe:
