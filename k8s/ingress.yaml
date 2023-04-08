@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-application-server
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - host: arch.homework
+      http:
+        paths:
+          - path: /otusapp/stanislav_poliakov/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: application-service
+                port:
+                  number: 80
+  ingressClassName: nginx
