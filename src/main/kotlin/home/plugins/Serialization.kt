@@ -2,6 +2,7 @@ package home.plugins
 
 import home.models.Dao
 import home.models.UserEntity
+import home.models.id
 import home.probes.Probe
 import home.probes.ProbeStatus
 import io.ktor.http.*
@@ -63,7 +64,7 @@ fun Application.configureSerialization(probe: Probe, database: Dao) {
                     )
                 } ?: run {
                     call.respond(
-                        status = HttpStatusCode.OK,
+                        status = HttpStatusCode.NotFound,
                         message = "No User found!"
                     )
                 }
@@ -78,15 +79,21 @@ fun Application.configureSerialization(probe: Probe, database: Dao) {
             database.addUser(user)?.also { id ->
                 call.respond(
                     status = HttpStatusCode.OK,
-                    message = "User created! ID = ${
-                        Base64.getEncoder()
+                    message = mapOf(
+                        "message" to "User created!",
+                        "ID" to Base64.getEncoder()
                             .withoutPadding()
                             .encodeToString("$id".toByteArray())
-                    }"
+                    )
                 )
             } ?: call.respond(
                 status = HttpStatusCode.OK,
-                message = "This User is already exists!"
+                message = mapOf(
+                    "message" to "This User is already exists!",
+                    "ID" to Base64.getEncoder()
+                        .withoutPadding()
+                        .encodeToString("${user.id}".toByteArray())
+                )
             )
         }
 
@@ -96,7 +103,10 @@ fun Application.configureSerialization(probe: Probe, database: Dao) {
                 if (database.deleteUser(stringId)) {
                     call.respond(
                         status = HttpStatusCode.OK,
-                        message = "User [$id] successfully deleted!"
+                        message = mapOf(
+                            "message" to "User successfully deleted!",
+                            "ID" to id
+                        )
                     )
                 } else {
                     call.respond(
@@ -117,16 +127,12 @@ fun Application.configureSerialization(probe: Probe, database: Dao) {
                 database.updateUser(decodedId, payload)?.let { newId ->
                     call.respond(
                         status = HttpStatusCode.OK,
-                        message = buildString {
-                            append("User successfully updated! ")
-                            if (decodedId.toIntOrNull() != newId) append(
-                                "New ID = ${
-                                    Base64.getEncoder()
-                                        .withoutPadding()
-                                        .encodeToString("$newId".toByteArray())
-                                }"
-                            )
-                        }
+                        message = mapOf(
+                            "message" to "User successfully updated!",
+                            "ID" to Base64.getEncoder()
+                                .withoutPadding()
+                                .encodeToString("$newId".toByteArray())
+                        )
                     )
                 } ?: run {
                     call.respond(
