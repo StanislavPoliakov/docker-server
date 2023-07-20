@@ -11,6 +11,5 @@ ktor:
         username: "$DB_USER:"
         password: "$DB_PASSWORD:"
         driver_postgres: "org.postgresql.Driver"
-        jdbcPostgresURL: "jdbc:postgresql://localhost:5432/testDb"
         driver_local: "org.h2.Driver"
         jdbcLocalURL: "jdbc:h2:file:./local.db"
