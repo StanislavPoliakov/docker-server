@@ -1,12 +1,9 @@
 package home
 
-import home.plugins.configureAdministration
-import home.plugins.configureHTTP
-import home.plugins.configureRouting
-import home.plugins.configureSerialization
-import io.ktor.server.application.Application
+import home.models.DaoImpl
 import home.plugins.*
 import home.probes.Probe
+import io.ktor.server.application.*
 
 val probe = Probe
 
@@ -15,8 +12,11 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused")
 fun Application.module() {
+    configureDatabase()
+    val database = DaoImpl()
     configureAdministration()
-    configureSerialization(probe)
+    configureSerialization(probe, database)
     configureHTTP()
     configureRouting()
+
 }
