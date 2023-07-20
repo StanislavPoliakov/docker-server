@@ -19,7 +19,28 @@ spec:
     spec:
       containers:
         - name: docker-server
-          image: stanislavpoliakov/docker-server:1.2.3
+          image: stanislavpoliakov/docker-server:1.3.0
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-application-server
+                  key: application_port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: config-application-server
+                  key: database_name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets-application-server
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets-application-server
+                  key: password
           ports:
             - containerPort: 8000
           livenessProbe:

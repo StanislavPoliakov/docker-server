@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-application-server
+data:
+  application_port: "8000"
+  database_name: "db_application_server"
