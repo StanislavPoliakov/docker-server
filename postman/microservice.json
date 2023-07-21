@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "d5ba210d-fb4b-4049-8819-272af10c4169",
+		"name": "Обучение Microservice Architecture",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6534142"
+	},
+	"item": [
+		{
+			"name": "probes",
+			"item": [
+				{
+					"name": "liveness",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Liveness SUCCESS\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"SUCCESS\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "arch.homework",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/probe/liveness/",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"probe",
+								"liveness",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readiness",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Readiness SUCCESS\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"SUCCESS\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "arch.homework",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/probe/readiness/",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"probe",
+								"readiness",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Liveness SUCCESS\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.liveness).to.eql(\"SUCCESS\");",
+									"});",
+									"",
+									"pm.test(\"Readiness SUCCESS\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.readiness).to.eql(\"SUCCESS\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "arch.homework",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/probe/all/",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"probe",
+								"all",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CRUD",
+			"item": [
+				{
+					"name": "all users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"        url:  \"http://arch.homework/otusapp/stanislav_poliakov/user?id=NzEwNzgwOTIz\", ",
+									"        method: 'DELETE'",
+									"    });",
+									"pm.sendRequest({",
+									"    url: \"http://arch.homework/otusapp/stanislav_poliakov/user\",",
+									"    method: 'POST',",
+									"    header: { 'content-type': 'application/json' },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(",
+									"            {",
+									"                userName: 'username',",
+									"                firstName: 'firstName',",
+									"                lastName: 'lastName',",
+									"                email: 'email',",
+									"                phone: 'phone'",
+									"            }",
+									"        )",
+									"    }",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"NzEwNzgwOTIz\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/users",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"        url:  \"http://arch.homework/otusapp/stanislav_poliakov/user?id=NzEwNzgwOTIz\", ",
+									"        method: 'DELETE'",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"User created!\");",
+									"    pm.expect(jsonData.ID).to.eql(\"NzEwNzgwOTIz\");",
+									"});",
+									"",
+									"pm.test(\"User already exists\", (done) => {",
+									"    pm.sendRequest({",
+									"        url: \"http://arch.homework/otusapp/stanislav_poliakov/user\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json',",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({",
+									"                userName: 'username',",
+									"                firstName: 'firstName',",
+									"                lastName: 'lastName',",
+									"                email: 'email',",
+									"                phone: 'phone'",
+									"            })",
+									"        }",
+									"    }, (err, res) => {",
+									"        pm.expect(res.code).to.equal(200);",
+									"        var jsonData = res.json();",
+									"        pm.expect(jsonData.message).to.eql(\"This User is already exists!\");",
+									"        pm.expect(jsonData.ID).to.eql(\"NzEwNzgwOTIz\");",
+									"        done();",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\" : \"username\",\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\",\n    \"email\" : \"email\",\n    \"phone\" : \"phone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/user",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"user"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: \"http://arch.homework/otusapp/stanislav_poliakov/user\",",
+									"    method: 'POST',",
+									"    header: { 'content-type': 'application/json' },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(",
+									"            {",
+									"                userName: 'username',",
+									"                firstName: 'firstName',",
+									"                lastName: 'lastName',",
+									"                email: 'email',",
+									"                phone: 'phone'",
+									"            }",
+									"        )",
+									"    }",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User found\", function () {",
+									"    var jsonData = pm.response.json();",
+									"        pm.expect(jsonData.userName).to.eql(\"username\")",
+									"        pm.expect(jsonData.firstName).to.eql(\"firstName\")",
+									"        pm.expect(jsonData.lastName).to.eql(\"lastName\")",
+									"        pm.expect(jsonData.email).to.eql(\"email\")",
+									"        pm.expect(jsonData.phone).to.eql(\"phone\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/user?id=NzEwNzgwOTIz",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "NzEwNzgwOTIz"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user by id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: \"http://arch.homework/otusapp/stanislav_poliakov/user\",",
+									"    method: 'POST',",
+									"    header: { 'content-type': 'application/json' },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(",
+									"            {",
+									"                userName: 'username',",
+									"                firstName: 'firstName',",
+									"                lastName: 'lastName',",
+									"                email: 'email',",
+									"                phone: 'phone'",
+									"            }",
+									"        )",
+									"    }",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Succefully deleted\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"User successfully deleted!\")",
+									"    pm.expect(jsonData.ID).to.eql(\"NzEwNzgwOTIz\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/user?id=NzEwNzgwOTIz",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "NzEwNzgwOTIz"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user by id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: \"http://arch.homework/otusapp/stanislav_poliakov/user\",",
+									"    method: 'POST',",
+									"    header: { 'content-type': 'application/json' },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(",
+									"            {",
+									"                userName: 'username',",
+									"                firstName: 'firstName',",
+									"                lastName: 'lastName',",
+									"                email: 'email',",
+									"                phone: 'phone'",
+									"            }",
+									"        )",
+									"    }",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Successfully updated\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"User successfully updated!\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\" : \"username\",\n    \"firstName\" : \"firstName\",\n    \"lastName\" : \"lastName\",\n    \"email\" : \"email\",\n    \"phone\" : \"phone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/user?id=NzEwNzgwOTIz",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "NzEwNzgwOTIz"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"OK\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"value": "arch.homework",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://arch.homework/otusapp/stanislav_poliakov/health/",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"stanislav_poliakov",
+						"health",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "shutdown",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 410 (Gone)\", function () {",
+							"    pm.response.to.have.status(410);",
+							"});",
+							"",
+							"pm.test(\"Shutdown message\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Server [0.0.0.0:8000] was shut down!\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"value": "arch.homework",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://arch.homework/otusapp/stanislav_poliakov/shutdown/",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"stanislav_poliakov",
+						"shutdown",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Answers format\", function () {",
+							"    pm.expect(pm.response.text()).to.match(/(?:-> ALIVE from: deployment-)/)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Host",
+						"value": "arch.homework",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://arch.homework/otusapp/stanislav_poliakov/check/",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"stanislav_poliakov",
+						"check",
+						""
+					]
+				},
+				"description": "check"
+			},
+			"response": []
+		}
+	]
+}
