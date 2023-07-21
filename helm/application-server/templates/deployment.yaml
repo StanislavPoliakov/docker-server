@@ -1,61 +1,72 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "application-server.fullname" . }}
-  labels:
-    {{- include "application-server.labels" . | nindent 4 }}
+  name: deployment-{{ .Release.Name }}
+  namespace: {{ .Values.settings.main.namespace }}
+  {{- template "application-service.labels" }}
+  {{- template "application-service.annotations" }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.settings.deployment.replicas }}
   selector:
     matchLabels:
-      {{- include "application-server.selectorLabels" . | nindent 6 }}
+      app: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.settings.deployment.update.strategy }}
+    rollingUpdate:
+      maxSurge: {{ .Values.settings.deployment.update.maxSurge }}
+      maxUnavailable: {{ .Values.settings.deployment.update.maxUnavailable }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "application-server.selectorLabels" . | nindent 8 }}
+        app: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "application-server.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.settings.deployment.container.name }}
+          image: {{ cat .Values.settings.deployment.container.image ":" .Chart.AppVersion | nospace }}
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-{{ .Release.Name }}
+                  key: application_port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: config-{{ .Release.Name }}
+                  key: database_name
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-{{ .Release.Name }}
+                  key: database_url
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-{{ .Release.Name }}
+                  key: database_port
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: credentials-{{ .Release.Name }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials-{{ .Release.Name }}
+                  key: password
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
+            - containerPort: {{ .Values.settings.main.port }}
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /probe/liveness/
+              port: {{ .Values.settings.main.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+              path: /probe/readiness/
+              port: {{ .Values.settings.main.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 5

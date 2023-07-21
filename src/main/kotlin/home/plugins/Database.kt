@@ -8,13 +8,20 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.DriverManager
+import java.util.*
 
 fun Application.configureDatabase() {
     val database = environment.config.propertyOrNull("ktor.database.name")?.getString().takeUnless { it.isNullOrEmpty() }?.let { dbName ->
-        val jdbcUrl = "jdbc:postgresql://database-postgresql:5432/$dbName"
+        val databaseUrl = environment.config.property("ktor.database.url").getString()
+        val databasePort = environment.config.property("ktor.database.port").getString()
+        val jdbcUrl = "jdbc:postgresql://$databaseUrl:$databasePort/$dbName"
         val driver = environment.config.property("ktor.database.driver_postgres").getString()
-        val username = environment.config.property("ktor.database.username").getString()
-        val password = environment.config.property("ktor.database.password").getString()
+        val username = Base64.getDecoder()
+            .decode(environment.config.property("ktor.database.username").getString())
+            .let(::String)
+        val password = Base64.getDecoder()
+            .decode(environment.config.property("ktor.database.password").getString())
+            .let(::String)
 
         Database.connect(url = jdbcUrl, driver = driver, user = username, password = password)
     } ?: run {

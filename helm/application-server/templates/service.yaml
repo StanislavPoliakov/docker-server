@@ -1,15 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "application-server.fullname" . }}
-  labels:
-    {{- include "application-server.labels" . | nindent 4 }}
+  name: service-{{ .Release.Name }}
+  namespace: {{ .Values.settings.main.namespace }}
+  {{- template "application-service.labels" }}
+  {{- template "application-service.annotations" }}
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
   selector:
-    {{- include "application-server.selectorLabels" . | nindent 4 }}
+    app: {{ .Release.Name }}
+  ports:
+    - protocol: {{ .Values.settings.service.protocol }}
+      port: {{ .Values.settings.service.port }}
+      targetPort: {{ .Values.settings.main.port }}
+      nodePort: {{ .Values.settings.service.nodePort }}
+  type: {{ .Values.settings.service.type }}
