@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-{{ .Release.Name }}
+  namespace: {{ .Values.settings.main.namespace }}
+  {{- template "application-service.labels" }}
+  {{- template "application-service.annotations" }}
+data:
+  application_port: {{ .Values.settings.main.port | quote }}
+  database_name: {{ .Values.global.postgresql.auth.database | quote }}
+  database_url: {{ .Release.Name }}-postgresql
+  database_port: {{ .Values.global.postgresql.servicePort | quote }}
