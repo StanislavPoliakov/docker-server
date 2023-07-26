@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: ingress-{{ .Release.Name }}
   namespace: {{ .Values.settings.main.namespace }}
+  labels:
+    app: {{ .Release.Name }}
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1

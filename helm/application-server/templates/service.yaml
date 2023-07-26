@@ -3,13 +3,14 @@ kind: Service
 metadata:
   name: service-{{ .Release.Name }}
   namespace: {{ .Values.settings.main.namespace }}
-  {{- template "application-service.labels" }}
-  {{- template "application-service.annotations" }}
+  labels:
+    app: {{ .Release.Name }}
 spec:
   selector:
     app: {{ .Release.Name }}
   ports:
     - protocol: {{ .Values.settings.service.protocol }}
+      name: metrics
       port: {{ .Values.settings.service.port }}
       targetPort: {{ .Values.settings.main.port }}
       nodePort: {{ .Values.settings.service.nodePort }}

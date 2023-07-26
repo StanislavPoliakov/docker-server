@@ -532,6 +532,95 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "delete all users",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/nt-delete-all",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"nt-delete-all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NT",
+			"item": [
+				{
+					"name": "populate_db",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/nt-post-populate-db",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"nt-post-populate-db"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get slow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/nt-get-slow",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"nt-get-slow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get fast",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://arch.homework/otusapp/stanislav_poliakov/nt-get-fast",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"otusapp",
+								"stanislav_poliakov",
+								"nt-get-fast"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

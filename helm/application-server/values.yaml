@@ -35,10 +35,11 @@ global:
       password: database_password
     servicePort: 5432
 
-postgresql:
-  metadata:
-    namespace: namespace-application-server
+nameOverride: "application-server"
+namespaceOverride: "namespace-application-server"
 
-ingress-nginx:
-  metadata:
-    namespace: namespace-application-server
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
