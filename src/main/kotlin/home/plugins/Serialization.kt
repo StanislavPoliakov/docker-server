@@ -12,9 +12,12 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.micrometer.prometheus.PrometheusMeterRegistry
+import kotlinx.coroutines.delay
 import java.util.*
+import kotlin.time.Duration.Companion.milliseconds
 
-fun Application.configureSerialization(probe: Probe, database: Dao) {
+fun Application.configureSerialization(probe: Probe, database: Dao, registry: PrometheusMeterRegistry) {
     install(ContentNegotiation) {
         json()
     }
@@ -164,5 +167,81 @@ fun Application.configureSerialization(probe: Probe, database: Dao) {
                 )
             }
         }
+        get("/metrics") {
+            call.respond(registry.scrape())
+        }
+
+        get("/nt-get-fast") {
+            if (doFastWork()) {
+                call.respond(
+                    status = HttpStatusCode.OK,
+                    message = "Job is done (fast)!"
+                )
+            } else {
+                call.respond(
+                    status = HttpStatusCode.ServiceUnavailable,
+                    message = "Service unavailable!"
+                )
+            }
+        }
+
+        get("/nt-get-slow") {
+            if (doSlowWork()) {
+                call.respond(
+                    status = HttpStatusCode.OK,
+                    message = "Job is done (slow)!"
+                )
+            } else {
+                call.respond(
+                    status = HttpStatusCode.NotFound,
+                    message = "Content not found!"
+                )
+            }
+        }
+
+        post("/nt-post-populate-db") {
+            populateDb(database)
+            call.respond(
+                status = HttpStatusCode.OK,
+                message = "User added!"
+            )
+        }
+
+        delete("/nt-delete-all") {
+            database.deleteAll()
+            call.respond(
+                status = HttpStatusCode.OK,
+                message = "Database cleared!"
+            )
+        }
     }
+}
+
+private val randomFast = Random(3L)
+private val randomSlow = Random(9L)
+private val randomDb = Random(Long.MAX_VALUE)
+
+private suspend fun doFastWork(): Boolean {
+    val delayValue = randomFast.nextLong(0, 3L)
+    delay((delayValue* 100).milliseconds)
+    return delayValue % 3 != 0L
+}
+
+private suspend fun doSlowWork(): Boolean {
+    val delayValue = randomSlow.nextLong(0L, 9L)
+    delay((delayValue* 100).milliseconds)
+    return delayValue % 3 != 0L
+}
+
+private suspend fun populateDb(database: Dao) {
+    val salt = randomDb.nextLong()
+    database.addUser(
+        UserEntity(
+            userName = "NT_username_$salt",
+            firstName = "NT_firstName",
+            lastName = "NT_lastName",
+            email = "NT_email",
+            phone = "NT_phone"
+        )
+    )
 }

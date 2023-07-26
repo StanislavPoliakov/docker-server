@@ -10,6 +10,7 @@ interface Dao {
     suspend fun deleteUser(id: String): Boolean
     suspend fun updateUser(id: String, payload: UserEntity): Int?
     suspend fun getAll(): List<Int>?
+    suspend fun deleteAll()
 }
 
 class DaoImpl : Dao {
@@ -41,8 +42,12 @@ class DaoImpl : Dao {
             .singleOrNull()
     }
 
-    override suspend fun deleteUser(id: String): Boolean = dbQuery{
+    override suspend fun deleteUser(id: String): Boolean = dbQuery {
         UserTable.deleteWhere { UserTable.id eq id.toIntOrNull() } > 0
+    }
+
+    override suspend fun deleteAll() = dbQuery {
+        UserTable.deleteAll(); Unit
     }
 
     override suspend fun updateUser(id: String, payload: UserEntity): Int? = dbQuery {

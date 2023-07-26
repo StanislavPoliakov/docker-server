@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   name: deployment-{{ .Release.Name }}
   namespace: {{ .Values.settings.main.namespace }}
-  {{- template "application-service.labels" }}
-  {{- template "application-service.annotations" }}
+  labels:
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.settings.deployment.replicas }}
   selector:
@@ -60,13 +60,13 @@ spec:
             httpGet:
               path: /probe/liveness/
               port: {{ .Values.settings.main.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 15
+            initialDelaySeconds: 5
+            periodSeconds: 5
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /probe/readiness/
               port: {{ .Values.settings.main.port }}
             initialDelaySeconds: 5
-            periodSeconds: 15
+            periodSeconds: 5
             failureThreshold: 5
